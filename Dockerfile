@@ -1,13 +1,15 @@
 # Use the official Node.js 18-alpine image as the base image for the build stage
-FROM node:18-alpine AS build
+FROM node:21.5-alpine AS build
 
 # Set the working directory to /app
 WORKDIR /app
 
 # Copy the package.json and package-lock.json files to the container
-COPY package*.json ./
+COPY package.json ./
+COPY package-lock.json ./
 
 # Install dependencies
+# RUN npm install -g npm@10.2.5
 RUN npm ci
 
 # Copy the rest of the application code to the container
@@ -17,7 +19,7 @@ COPY . .
 RUN npm run build
 
 # Use the official Node.js 18-alpine image as the base image for the runtime stage
-FROM node:18-alpine AS runtime
+FROM node:21.5-alpine AS runtime
 
 # Set the working directory to /app
 WORKDIR /app
